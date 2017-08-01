@@ -14,7 +14,7 @@ plugins {
 description = "VanillaJS t5/core/dom implementation"
 
 group = "de.eddyson"
-version = "0.0.3"
+version = "0.0.4"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
@@ -75,7 +75,7 @@ allprojects {
         target.parentFile.mkdirs()
         
         // also return the exports from the AMD module
-        def hackedContent = v.replaceAll(/(?m)^}\);$/, "  return exports;\n});")
+        def hackedContent = v.replaceAll(/(?m)^}\);$/, "  return exports.default;\n});")
         target.text = hackedContent
       }
     }
