@@ -1,0 +1,96 @@
+buildscript {
+  repositories {
+    maven { url "http://repo.eddyson.loc/libs-release" }
+  }
+  dependencies {
+    classpath "de.eddyson:tapestry-react:0.30.1"
+  }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+description = "VanillaJS t5/core/dom implementation"
+
+group = "de.eddyson"
+version = "0.0.3"
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+
+def versions= [
+  tapestry: '5.4.3',
+  slf4j: '1.7.25',
+  
+  // test scopes
+  spock: '1.1-groovy-2.4',
+  selenium: '2.53.1'
+  
+]
+
+repositories {
+  jcenter()
+}
+
+sourceCompatibility = '1.7'
+
+task sourceJar(type: Jar) {
+  dependsOn classes
+  classifier "sources"
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives sourceJar
+}
+
+dependencies {
+  compile "org.apache.tapestry:tapestry-core:$versions.tapestry"
+}
+
+
+jar {
+  manifest { attributes 'Tapestry-Module-Classes': 'de.eddyson.tapestry.dom.vanilla.modules.TapestryDomVanillaModule' }
+}
+
+
+allprojects {
+
+  processResources {
+    def compilerInputs = [:]
+
+    filesMatching(['**/*.jsm']){
+      def relativePath = it.path
+      def relativeOutputPath = relativePath.replaceAll(/m?$/, '')
+      compilerInputs.put(relativeOutputPath, it.file.text)
+      it.exclude()
+    }
+    doLast {
+      def compiler =  new de.eddyson.tapestry.react.StandaloneCompiler()
+      def outputs = compiler.compile(compilerInputs)
+      outputs.each { k,v->
+        def target = new File(destinationDir, k)
+        target.parentFile.mkdirs()
+        
+        // also return the exports from the AMD module
+        def hackedContent = v.replaceAll(/(?m)^}\);$/, "  return exports;\n});")
+        target.text = hackedContent
+      }
+    }
+  }
+}
+
+bintray {
+    user = 'fooberger'
+    key = System.env.bintrayAPIKey
+    configurations = ['archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'de.eddyson:tapestry-dom-vanilla'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/eddyson-de/tapestry-dom-vanilla'
+    }
+}
