@@ -110,6 +110,10 @@ class ElementWrapper {
       return this.findParent(selector);
     }
   }
+  
+  focus(){
+    this.element.focus();
+  }
 }
 
 class EventWrapper {
@@ -125,9 +129,19 @@ class EventWrapper {
   }
 }
 
-const wrap = (element) => new ElementWrapper(element);
+const wrap = (element) => {
+  if (typeof element === 'string'){
+    element = document.getElementById(element);
+    if (element == null){
+      return null
+    }
+  } else if (element == null){
+    throw new Error("Attempt to wrap a null DOM element") 
+  }
+  return new ElementWrapper(element);
+}
 
-export const body = wrap(document.body);
+const body = wrap(document.body);
 
 const createEventHandler = (selector, callback) => {
   return ({target})=>{
@@ -168,7 +182,7 @@ const onevent = (elements, eventNames, match, handler) => {
   };
 };
 
-export const on = (selector, events, match, handler) => {
+const on = (selector, events, match, handler) => {
   if (handler == null) {
     handler = match;
     match = null;
@@ -177,13 +191,13 @@ export const on = (selector, events, match, handler) => {
   return onevent(elements, events, match, handler);
 };
 
-export const onDocument = (eventName, selector, callback) => {
+const onDocument = (eventName, selector, callback) => {
   const handler = createEventHandler(callback === undefined ? undefined : selector, callback === undefined ? selector : callback);
   document.addEventListener(eventName, handler);
   return () => document.removeEventListener(eventName, handler);
 };
 
-export const create = (elementName, attributes, body)=>{
+const create = (elementName, attributes, body)=>{
   
   if (typeof elementName === 'object'){
     body = attributes;
@@ -227,7 +241,7 @@ const adjustAjaxCount = (delta) => {
   body.attr('data-ajax-active', activeAjaxCount);
 };
 
-export const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}) => {
+const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}) => {
   let fetchOpts = {};
   let queryUrl = url;
   var headers = new Headers();
@@ -293,7 +307,7 @@ const getDataAttributeAsObject = (element, attribute) => {
   }
 };
 
-export const getEventUrl = (eventName, element) => {
+const getEventUrl = (eventName, element) => {
   if (!(eventName != null)) {
     throw 'dom.getEventUrl: the eventName parameter cannot be null';
   }
@@ -326,6 +340,6 @@ export const getEventUrl = (eventName, element) => {
 };
 
 let exports = wrap;
-Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl });
+Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl, create, ajaxRequest });
 
 export default exports;
