@@ -1,11 +1,11 @@
 const camelCase = (str)=> str.replace(/-([a-z])/g, (_,l)=>l.toUpperCase());
 
 class ElementWrapper {
-  
+
   constructor(element){
     this.element = element;
   }
-  
+
   attr(...args){
     const name = args[0];
     if (args.length === 1){
@@ -15,13 +15,13 @@ class ElementWrapper {
         });
         return this;
       }
-        
+
       return this.element.getAttribute(name);
     } else {
       return this.element.setAttribute(name, args[1]);
     }
   }
-  
+
   css(...args){
     const prop = camelCase(args[0]);
     if (args.length === 2){
@@ -35,12 +35,12 @@ class ElementWrapper {
       return this.element.style[prop];
     }
   }
-  
+
   remove(){
     this.element.parentNode.removeChild(this.element);
     return this;
   }
-  
+
   find(selector){
     const elements = this.element.querySelectorAll(selector);
     let result = [];
@@ -50,7 +50,7 @@ class ElementWrapper {
     }
     return result;
   }
-  
+
   findFirst(selector){
     const el = this.element.querySelector(selector);
     if (el === null){
@@ -59,7 +59,7 @@ class ElementWrapper {
       return wrap(el);
     }
   }
-  
+
   append(content){
     if (typeof content === 'string'){
       this.element.innerHTML = content;
@@ -70,28 +70,39 @@ class ElementWrapper {
     }
     return this;
   }
-  
+
+  insertBefore(content){
+    const element = this.element;
+    const parentNode = element.parentNode;
+    if (content instanceof ElementWrapper){
+      parentNode.insertBefore(content.element, element);
+    } else {
+      throw 'Unsupported: ' + content;
+    }
+    return this;
+  }
+
   update(content){
     this.element.innerHTML = '';
     this.append(content);
   }
-  
+
   hide(){
     this.element.style.display = 'none';
     return this;
   }
-  
+
   show(){
     this.element.style.display = 'block';
     return this;
   }
-  
+
   on(eventName, selector, callback){
     const handler = createEventHandler(callback === undefined ? undefined : selector, callback === undefined ? selector : callback);
     this.element.addEventListener(eventName, handler);
     return () => this.element.removeEventListener(eventName, handler);
   }
-  
+
   findParent(selector){
     let current = this.element.parentNode;
     while (current !== undefined){
@@ -102,7 +113,7 @@ class ElementWrapper {
     }
     return null;
   }
-  
+
   closest(selector){
     if (this.element.matches(selector)){
       return this;
@@ -110,19 +121,25 @@ class ElementWrapper {
       return this.findParent(selector);
     }
   }
-  
+
   focus(){
     this.element.focus();
+  }
+
+  trigger(eventName, memo){
+    const event = new CustomEvent(eventName, { bubbles: true, cancelable: true, detail: memo });
+    const cancelled = !this.element.dispatchEvent(event);
+    return !cancelled;
   }
 }
 
 class EventWrapper {
-  
+
   constructor(event, memo){
     this.nativeEvent = event;
     this.memo = memo;
   }
-  
+
   stop() {
     this.nativeEvent.preventDefault();
     this.nativeEvent.stopImmediatePropagation();
@@ -136,7 +153,7 @@ const wrap = (element) => {
       return null
     }
   } else if (element == null){
-    throw new Error("Attempt to wrap a null DOM element") 
+    throw new Error("Attempt to wrap a null DOM element")
   }
   return new ElementWrapper(element);
 }
@@ -155,8 +172,8 @@ const onevent = (elements, eventNames, match, handler) => {
   if (handler == null) {
     throw new Error('No event handler was provided.');
   }
-  const wrapped = (event, memo) => {
-    const element = event.target;
+  const wrapped = (event) => {
+    const { target: element, detail: memo} = event;
     if (match != null && !element.matches(match)){
       return;
     }
@@ -198,7 +215,7 @@ const onDocument = (eventName, selector, callback) => {
 };
 
 const create = (elementName, attributes, body)=>{
-  
+
   if (typeof elementName === 'object'){
     body = attributes;
     attributes = elementName;
@@ -209,7 +226,7 @@ const create = (elementName, attributes, body)=>{
     body = attributes;
     attributes = null;
   }
-  
+
   const el = wrap(document.createElement(elementName || 'div'));
   if (attributes){
     el.attr(attributes);
@@ -218,7 +235,7 @@ const create = (elementName, attributes, body)=>{
     el.append(body);
   }
   return el;
-  
+
 };
 
 const toSearchParams = function(data) {
