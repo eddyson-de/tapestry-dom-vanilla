@@ -309,7 +309,7 @@ const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}
   adjustAjaxCount(1);
   fetch(queryUrl, fetchOpts).then((response)=>{
     adjustAjaxCount(-1);
-    const {ok, headers, statusText} = response;
+    const {ok, headers, status, statusText} = response;
     const callSuccessHandler = ok && success !== undefined;
     if (callSuccessHandler || !ok){
       const contentType = headers.get('Content-Type');
@@ -329,11 +329,11 @@ const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}
       };
       if (isJSON){
         response.json().then((json)=>{
-          resolver({json: json, header: (name)=>headers.get(name)});
+          resolver({json: json, status: status, statusText: statusText, header: (name)=>headers.get(name)});
         });
       } else {
         response.text().then((text)=>{
-          resolver({text: text, header: (name)=>headers.get(name)});
+          resolver({text: text, status: status, statusText: statusText, header: (name)=>headers.get(name)});
         });
       }
     }
