@@ -62,7 +62,7 @@ class ElementWrapper {
 
   append(content){
     if (typeof content === 'string'){
-      this.element.innerHTML = content;
+      this.element.innerHTML = this.element.innerHTML + content;
     } else if (content instanceof ElementWrapper){
       this.element.appendChild(content.element);
     } else {
