@@ -133,6 +133,18 @@ class ElementWrapper {
     const cancelled = !this.element.dispatchEvent(event);
     return !cancelled;
   }
+  
+  hasClass(name){
+    return this.element.classList.contains(name);
+  }
+  
+  removeClass(name){
+    return this.element.classList.remove(name);
+  }
+  
+  addClass(name){
+    return this.element.classList.add(name);
+  }
 }
 
 class EventWrapper {
