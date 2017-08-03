@@ -70,6 +70,16 @@ class ElementWrapper {
     }
     return this;
   }
+  
+  prepend(content){
+    const firstChild = this.element.firstChild;
+    if (firstChild != null){
+      new ElementWrapper(firstChild).insertBefore(content);
+    } else {
+      this.append(content);
+    }
+    return this;
+  }
 
   insertBefore(content){
     const element = this.element;
