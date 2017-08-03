@@ -318,7 +318,7 @@ const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}
         if (callSuccessHandler){
           success(callbackArg);
         } else {
-          const details = callbackArg.text !== '' ? ` -- #{callbackArg.text}` : '';
+          const details = callbackArg.text !== '' ? ` -- ${callbackArg.text}` : '';
           const message = `Request to ${url} failed with status ${statusText}${details}.`;
           if (failure !== undefined){
             failure(callbackArg, message);
