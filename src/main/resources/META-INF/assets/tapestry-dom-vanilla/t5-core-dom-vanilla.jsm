@@ -309,17 +309,22 @@ const ajaxRequest = (url, {data, method = 'POST', success, contentType, failure}
   adjustAjaxCount(1);
   fetch(queryUrl, fetchOpts).then((response)=>{
     adjustAjaxCount(-1);
-    const {ok, headers} = response;
+    const {ok, headers, statusText} = response;
     const callSuccessHandler = ok && success !== undefined;
-    const callFailureHander = !ok && failure !== undefined;
-    if (callSuccessHandler || callFailureHander){
+    if (callSuccessHandler || !ok){
       const contentType = headers.get('Content-Type');
       const isJSON = contentType && contentType.indexOf('application/json') === 0;
       const resolver = (callbackArg) =>{
         if (callSuccessHandler){
           success(callbackArg);
         } else {
-          failure(callbackArg);
+          const details = callbackArg.text !== '' ? ` -- #{callbackArg.text}` : '';
+          const message = `Request to ${url} failed with status ${statusText}${details}.`;
+          if (failure !== undefined){
+            failure(callbackArg, message);
+          } else {
+            throw new Error(message);
+          }
         }
       };
       if (isJSON){
