@@ -84,7 +84,9 @@ class ElementWrapper {
 
   update(content){
     this.element.innerHTML = '';
-    this.append(content);
+    if (content != null){
+      this.append(content);
+    }
   }
 
   hide(){
