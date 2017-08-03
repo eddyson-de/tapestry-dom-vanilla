@@ -10,7 +10,7 @@ The project is in its very early stages, so things will probably break if you tr
 
 ### `build.gradle`:
 ```groovy
-respositories {
+repositories {
   jcenter()
 }
 
