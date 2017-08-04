@@ -2,6 +2,8 @@ import events from 't5/core/events';
 
 const camelCase = (str)=> str.replace(/-([a-z])/g, (_,l)=>l.toUpperCase());
 
+const elementMetadata = new WeakMap();
+
 class ElementWrapper {
 
   constructor(element){
@@ -193,14 +195,14 @@ class ElementWrapper {
   }
   
   meta(name, ...args){
-    let metaDataMap = this.element._tapestryMetadata;
-    const current = metaDataMap !== undefined ? metaDataMap.get(name) : undefined;
+    let metaDataMap = elementMetadata.get(this.element);
+    const current = metaDataMap !== undefined ? metaDataMap[name] : undefined;
     if (args.length > 0){
       if (metaDataMap === undefined){
-        metaDataMap = new WeakMap();
-        this.element._tapestryMetadata = metaDataMap;
+        metaDataMap = {};
+        elementMetadata.set(this.element, metaDataMap);
       }
-      metaDataMap.set(name, args[1]);
+      metaDataMap[name] = args[1];
     }
     return current;
   }

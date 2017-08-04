@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  runtime 'de.eddyson:tapestry-dom-vanilla:0.0.22'
+  runtime 'de.eddyson:tapestry-dom-vanilla:0.0.23'
 }
 
 ```
