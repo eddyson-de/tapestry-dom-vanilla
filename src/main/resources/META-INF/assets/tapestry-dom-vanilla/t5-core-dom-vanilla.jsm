@@ -93,6 +93,22 @@ class ElementWrapper {
     }
     return this;
   }
+  
+  insertAfter(content){
+    const element = this.element;
+    const nextSibling = element.nextSibling
+    const parentNode = element.parentNode;
+    if (nextSibling == null){
+      new ElementWrapper(parentNode).append(content);
+    } else {
+      if (content instanceof ElementWrapper){
+        parentNode.insertBefore(content.element, nextSibling);
+      } else {
+        throw 'Unsupported: ' + content;
+      }
+    }
+    return this;
+  }
 
   update(content){
     this.element.innerHTML = '';
