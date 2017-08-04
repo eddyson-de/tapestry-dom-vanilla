@@ -104,7 +104,7 @@ class ElementWrapper {
   
   insertAfter(content){
     const element = this.element;
-    const nextSibling = element.nextSibling
+    const nextSibling = element.nextSibling;
     const parentNode = element.parentNode;
     if (nextSibling == null){
       new ElementWrapper(parentNode).append(content);
@@ -191,7 +191,7 @@ class ElementWrapper {
   }
   
   meta(name, ...args){
-    let metaDataMap = this.element._tapestryMetadata; 
+    let metaDataMap = this.element._tapestryMetadata;
     const current = metaDataMap !== undefined ? metaDataMap.get(name) : undefined;
     if (args.length > 1){
       if (metaDataMap === undefined){
@@ -239,13 +239,13 @@ const wrap = (element) => {
   if (typeof element === 'string'){
     element = document.getElementById(element);
     if (element == null){
-      return null
+      return null;
     }
   } else if (element == null){
-    throw new Error("Attempt to wrap a null DOM element")
+    throw new Error('Attempt to wrap a null DOM element');
   }
   return new ElementWrapper(element);
-}
+};
 
 const body = wrap(document.body);
 
@@ -254,7 +254,7 @@ const createEventHandler = (selector, callback) => {
     const {target: element} = event;
     if (selector === undefined || element.matches(selector)){
       const { detail: memo} = event;
-      const eventWrapper = new EventWrapper(event, memo)
+      const eventWrapper = new EventWrapper(event, memo);
       callback.call(wrap(element), eventWrapper, memo);
     }
   };
@@ -460,7 +460,7 @@ const scanner = (selector, callback) => {
     root.find(selector).forEach((el)=>{
       callback(el);
     });
-  }
+  };
   
   scan(body);
   
