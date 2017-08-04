@@ -227,8 +227,9 @@ const body = wrap(document.body);
 
 const createEventHandler = (selector, callback) => {
   return (event)=>{
-    if (selector === undefined || target.matches(selector)){
-      const { target: element, detail: memo} = event;
+    const {target: element} = event;
+    if (selector === undefined || element.matches(selector)){
+      const { detail: memo} = event;
       const eventWrapper = new EventWrapper(event, memo)
       callback.call(wrap(element), eventWrapper, memo);
     }
