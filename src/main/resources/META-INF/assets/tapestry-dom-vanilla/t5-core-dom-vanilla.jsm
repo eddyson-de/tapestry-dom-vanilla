@@ -195,7 +195,7 @@ class ElementWrapper {
   meta(name, ...args){
     let metaDataMap = this.element._tapestryMetadata;
     const current = metaDataMap !== undefined ? metaDataMap.get(name) : undefined;
-    if (args.length > 1){
+    if (args.length > 0){
       if (metaDataMap === undefined){
         metaDataMap = new WeakMap();
         this.element._tapestryMetadata = metaDataMap;

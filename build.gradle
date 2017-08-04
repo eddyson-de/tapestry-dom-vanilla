@@ -14,7 +14,7 @@ plugins {
 description = "VanillaJS t5/core/dom implementation"
 
 group = "de.eddyson"
-version = "0.0.21"
+version = "0.0.22"
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
