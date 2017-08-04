@@ -179,6 +179,19 @@ class ElementWrapper {
     return current;
   }
   
+  deepVisible(){
+    const element = this.element;
+    return element.offsetWidth > 0 && element.offsetHeight > 0;
+  }
+  
+  parent(){
+    const parent = this.element.parentNode;
+    if (parentNode == null){
+      return null;
+    }
+    return new ElementWrapper(parent);
+  }
+  
 }
 
 class EventWrapper {
