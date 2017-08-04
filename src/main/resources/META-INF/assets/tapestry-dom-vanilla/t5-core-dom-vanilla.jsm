@@ -157,6 +157,28 @@ class ElementWrapper {
   addClass(name){
     return this.element.classList.add(name);
   }
+  
+  value(...args){
+    const current = this.element.value;
+    if (args.length > 0){
+      this.element.value = args[0];
+    }
+    return current;
+  }
+  
+  meta(name, ...args){
+    let metaDataMap = this.element._tapestryMetadata; 
+    const current = metaDataMap !== undefined ? metaDataMap.get(name) : undefined;
+    if (args.length > 1){
+      if (metaDataMap === undefined){
+        metaDataMap = new WeakMap();
+        this.element._tapestryMetadata = metaDataMap;
+      }
+      metaDataMap.set(name, args[1]);
+    }
+    return current;
+  }
+  
 }
 
 class EventWrapper {
