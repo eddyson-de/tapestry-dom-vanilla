@@ -255,7 +255,10 @@ const createEventHandler = (selector, callback) => {
     if (selector === undefined || element.matches(selector)){
       const { detail: memo} = event;
       const eventWrapper = new EventWrapper(event, memo);
-      callback.call(wrap(element), eventWrapper, memo);
+      const result = callback.call(wrap(element), eventWrapper, memo);
+      if (result === false) {
+        eventWrapper.stop();
+      }
     }
   };
 };
