@@ -20,7 +20,15 @@ class ElementWrapper {
 
       return this.element.getAttribute(name);
     } else {
-      return this.element.setAttribute(name, args[1]);
+      const oldValue = this.attr(name);
+      const newValue = args[1];
+      if (newValue == null){
+        this.element.removeAttribute(name);
+      } else {
+        this.element.setAttribute(name, newValue);
+      }
+        
+      return oldValue;
     }
   }
 
