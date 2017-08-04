@@ -142,12 +142,12 @@ class ElementWrapper {
   }
 
   findParent(selector){
-    let current = this.element.parentNode;
-    while (current !== undefined){
+    let current = this.element.parentElement;
+    while (current != null){
       if (current.matches(selector)){
         return wrap(current);
       }
-      current = current.parentNode;
+      current = current.parentElement;
     }
     return null;
   }
