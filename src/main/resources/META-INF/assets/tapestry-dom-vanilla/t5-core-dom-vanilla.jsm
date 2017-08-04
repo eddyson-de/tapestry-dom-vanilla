@@ -1,3 +1,5 @@
+import events from 't5/core/events';
+
 const camelCase = (str)=> str.replace(/-([a-z])/g, (_,l)=>l.toUpperCase());
 
 class ElementWrapper {
@@ -385,7 +387,29 @@ const getEventUrl = (eventName, element) => {
   return url;
 };
 
+const scanners = [];
+
+const scanner = (selector, callback) => {
+  const scan = (root) => {
+    root.find(selector).forEach((el)=>{
+      callback(el);
+    });
+  }
+  
+  scan(body);
+  
+  if (scanners.length === 0){
+    body.on(events.initializeComponents, function(){
+      scanners.forEach(function(f){
+        f(this);
+      });
+    });
+  }
+  
+  scanners.push(scan);
+};
+
 let exports = wrap;
-Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl, create, ajaxRequest });
+Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl, create, ajaxRequest, scanner });
 
 export default exports;
