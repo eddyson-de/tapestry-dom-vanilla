@@ -269,14 +269,19 @@ const body = wrap(document.body);
 
 const createEventHandler = (selector, callback) => {
   return (event)=>{
-    const {target: element} = event;
-    if (selector === undefined || element.matches(selector)){
-      const { detail: memo} = event;
-      const eventWrapper = new EventWrapper(event, memo);
-      const result = callback.call(wrap(element), eventWrapper, memo);
-      if (result === false) {
-        eventWrapper.stop();
+    const {target} = event;
+    let element = wrap(target);
+    if (selector !== undefined){
+      element = element.closest(selector);
+      if (element == null){
+        return;
       }
+    }
+    const { detail: memo} = event;
+    const eventWrapper = new EventWrapper(event, memo);
+    const result = callback.call(element, eventWrapper, memo);
+    if (result === false) {
+      eventWrapper.stop();
     }
   };
 };
@@ -286,10 +291,15 @@ const onevent = (elements, eventNames, match, handler) => {
     throw new Error('No event handler was provided.');
   }
   const wrapped = (event) => {
-    const { target: element, detail: memo} = event;
-    if (match != null && !element.matches(match)){
-      return;
+    const { target} = event;
+    let element = wrap(target);
+    if (match != null){
+      element = element.closest(match);
+      if (element == null){
+        return;
+      }
     }
+    const { detail: memo} = event;
     const elementWrapper = new ElementWrapper(event.target);
     const eventWrapper = new EventWrapper(event, memo);
     const result = handler.call(elementWrapper, eventWrapper, memo);
