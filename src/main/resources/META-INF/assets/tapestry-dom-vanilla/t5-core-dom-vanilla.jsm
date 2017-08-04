@@ -186,10 +186,14 @@ class ElementWrapper {
   
   parent(){
     const parent = this.element.parentNode;
-    if (parentNode == null){
+    if (parent == null){
       return null;
     }
     return new ElementWrapper(parent);
+  }
+  
+  checked(){
+    return this.element.checked;
   }
   
 }
@@ -222,9 +226,11 @@ const wrap = (element) => {
 const body = wrap(document.body);
 
 const createEventHandler = (selector, callback) => {
-  return ({target})=>{
+  return (event)=>{
     if (selector === undefined || target.matches(selector)){
-      callback.call(wrap(target));
+      const { target: element, detail: memo} = event;
+      const eventWrapper = new EventWrapper(event, memo)
+      callback.call(wrap(element), eventWrapper, memo);
     }
   };
 };
