@@ -77,6 +77,8 @@ class ElementWrapper {
       this.element.innerHTML = this.element.innerHTML + content;
     } else if (content instanceof ElementWrapper){
       this.element.appendChild(content.element);
+    } else if (content instanceof HTMLElement){
+      this.element.appendChild(content);
     } else {
       throw 'Unsupported: ' + content;
     }
@@ -98,6 +100,8 @@ class ElementWrapper {
     const parentNode = element.parentNode;
     if (content instanceof ElementWrapper){
       parentNode.insertBefore(content.element, element);
+    } else if (content instanceof HTMLElement){
+      parentNode.insertBefore(content, element);
     } else {
       throw 'Unsupported: ' + content;
     }
@@ -113,6 +117,8 @@ class ElementWrapper {
     } else {
       if (content instanceof ElementWrapper){
         parentNode.insertBefore(content.element, nextSibling);
+      } else if (content instanceof HTMLElement){
+        parentNode.insertBefore(content, nextSibling);
       } else {
         throw 'Unsupported: ' + content;
       }
