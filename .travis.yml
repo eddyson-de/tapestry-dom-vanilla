@@ -5,6 +5,9 @@ jdk:
 
 sudo: false
 
+env:
+  GRADLE_OPTS="-Dorg.gradle.daemon=false"
+
 cache:
   directories:
   - $HOME/.gradle
@@ -15,7 +18,7 @@ before_install:
 
 deploy:
   provider: script
-  script: ./gradlew bintrayUpload
+  script: ./gradlew --no-daemon bintrayUpload
   skip_cleanup: true
   on:
     branch: master
