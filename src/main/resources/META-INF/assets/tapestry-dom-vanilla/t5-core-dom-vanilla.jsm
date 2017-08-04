@@ -138,7 +138,7 @@ class ElementWrapper {
   on(eventName, selector, callback){
     const handler = createEventHandler(callback === undefined ? undefined : selector, callback === undefined ? selector : callback);
     this.element.addEventListener(eventName, handler);
-    return () => this.element.removeEventListener(eventName, handler);
+    return this;
   }
 
   findParent(selector){
