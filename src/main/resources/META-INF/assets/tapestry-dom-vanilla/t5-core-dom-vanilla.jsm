@@ -234,6 +234,10 @@ class ElementWrapper {
     return this.element.textContent;
   }
   
+  visible(){
+    return this.css('display') !== 'none';
+  }
+  
 }
 
 class EventWrapper {
