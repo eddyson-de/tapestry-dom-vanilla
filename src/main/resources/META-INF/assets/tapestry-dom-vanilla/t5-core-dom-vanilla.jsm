@@ -220,6 +220,10 @@ class ElementWrapper {
     return this.element.checked;
   }
   
+  text(){
+    return this.element.textContent;
+  }
+  
 }
 
 class EventWrapper {
