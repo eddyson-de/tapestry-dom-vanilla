@@ -202,7 +202,7 @@ class ElementWrapper {
         metaDataMap = {};
         elementMetadata.set(this.element, metaDataMap);
       }
-      metaDataMap[name] = args[1];
+      metaDataMap[name] = args[0];
     }
     return current;
   }
