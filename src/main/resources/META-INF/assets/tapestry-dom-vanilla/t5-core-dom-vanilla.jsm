@@ -131,6 +131,7 @@ class ElementWrapper {
     if (content != null){
       this.append(content);
     }
+    return this;
   }
 
   hide(){
