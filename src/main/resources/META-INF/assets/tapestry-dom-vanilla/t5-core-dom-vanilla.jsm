@@ -170,6 +170,7 @@ class ElementWrapper {
 
   focus(){
     this.element.focus();
+    return this;
   }
 
   trigger(eventName, memo){
@@ -497,8 +498,9 @@ const scanner = (selector, callback) => {
   
   if (scanners.length === 0){
     body.on(events.initializeComponents, function(){
-      scanners.forEach(function(f){
-        f(this);
+      const element = this;
+      scanners.forEach(f => {
+        f(element);
       });
     });
   }
