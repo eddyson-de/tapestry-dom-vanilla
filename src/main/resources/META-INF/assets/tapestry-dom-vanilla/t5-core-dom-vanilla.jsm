@@ -452,6 +452,6 @@ const scanner = (selector, callback) => {
 };
 
 let exports = wrap;
-Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl, create, ajaxRequest, scanner });
+Object.assign(exports, { ElementWrapper, body, onDocument, on, getEventUrl, create, ajaxRequest, scanner, wrap });
 
 export default exports;
