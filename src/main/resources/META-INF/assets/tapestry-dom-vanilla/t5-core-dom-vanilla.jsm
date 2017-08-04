@@ -175,11 +175,13 @@ class ElementWrapper {
   }
   
   removeClass(name){
-    return this.element.classList.remove(name);
+    this.element.classList.remove(name);
+    return this;
   }
   
   addClass(name){
-    return this.element.classList.add(name);
+    this.element.classList.add(name);
+    return this;
   }
   
   value(...args){
